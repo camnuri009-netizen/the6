@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>온빌드 ONBUILD</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,'Noto Sans KR',sans-serif;background:#f7f9fc;color:#102033}
+    a{text-decoration:none;color:inherit}
+    header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e5e7eb}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+    .nav{height:76px;display:flex;justify-content:space-between;align-items:center}
+    .brand{display:flex;align-items:center;gap:14px;font-weight:900}
+    .logoBox{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#061a3a,#0a7cff);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px}
+    .menu{display:flex;gap:28px;font-weight:800}
+    .btn{border:0;border-radius:999px;padding:13px 22px;font-weight:900;cursor:pointer}
+    .btnBlue{background:#0a63d8;color:#fff}
+    .btnDark{background:#071a33;color:#fff}
+    .hero{background:linear-gradient(135deg,#061a3a,#0c376f 55%,#0a7cff);color:#fff}
+    .heroGrid{display:grid;grid-template-columns:1.05fr .95fr;gap:46px;align-items:center;padding:86px 20px}
+    .badge{display:inline-block;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);border-radius:999px;padding:10px 16px;margin-bottom:18px}
+    .hero h1{white-space:pre-line;font-size:58px;line-height:1.12;margin:0 0 22px;font-weight:1000}
+    .hero p{font-size:20px;color:#dbeafe;line-height:1.8}
+    .heroImg{height:410px;border-radius:34px;background:linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.1)),url('https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1200');background-size:cover;background-position:center;box-shadow:0 30px 70px rgba(0,0,0,.35)}
+    section{padding:78px 0}
+    .center{text-align:center}
+    .sectionTitle{font-size:42px;margin:8px 0 12px;font-weight:1000}
+    .sub{color:#64748b;line-height:1.7}
+    .cards{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:38px}
+    .card{background:#fff;border-radius:26px;overflow:hidden;box-shadow:0 10px 28px rgba(15,23,42,.08);transition:.2s}
+    .card:hover{transform:translateY(-4px);box-shadow:0 18px 38px rgba(15,23,42,.13)}
+    .cardImg{height:150px;background:#dbeafe;background-size:cover;background-position:center}
+    .cardBody{padding:22px}
+    .icon{font-size:34px;margin-bottom:10px}
+    .card h3{margin:0 0 10px;font-size:22px}
+    .more{color:#0a63d8;font-weight:900;margin-top:16px}
+    .detailGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+    .detail{background:#fff;border-radius:30px;overflow:hidden;box-shadow:0 10px 28px rgba(15,23,42,.08)}
+    .detail img{width:100%;height:250px;object-fit:cover}
+    .detailBody{padding:28px}
+    .works{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:32px}
+    .work{background:#fff;border-radius:26px;overflow:hidden;box-shadow:0 10px 28px rgba(15,23,42,.08)}
+    .work img{width:100%;height:230px;object-fit:cover}
+    .workBody{padding:22px}
+    .float{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:50;background:#0b2e5b;color:white;border-radius:18px;overflow:hidden;box-shadow:0 14px 28px rgba(0,0,0,.24)}
+    .float a{width:74px;height:74px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:12px;font-weight:900;border-bottom:1px solid rgba(255,255,255,.25)}
+    .float span{font-size:24px;margin-bottom:3px}
+    .admin{display:none;background:#071a33;color:#fff;padding:40px 0}
+    .admin.show{display:block}
+    .adminGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+    .panel{background:#fff;color:#102033;border-radius:24px;padding:24px}
+    input,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:12px;margin:7px 0;font-size:15px}
+    textarea{min-height:88px}
+    label{font-size:13px;font-weight:900;color:#334155}
+    .serviceEditor{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .editItem{border:1px solid #e5e7eb;border-radius:18px;padding:16px}
+    footer{background:#071a33;color:#cbd5e1;text-align:center;padding:32px}
+    @media(max-width:900px){
+      .menu{display:none}.heroGrid,.detailGrid,.adminGrid{grid-template-columns:1fr}
+      .cards{grid-template-columns:1fr 1fr}.works{grid-template-columns:1fr}
+      .hero h1{font-size:42px}.heroImg{height:290px}.float{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="float">
+    <a id="floatBlog" href="#" target="_blank"><span>💬</span>블로그</a>
+    <a id="floatInsta" href="#" target="_blank"><span>📷</span>인스타</a>
+    <a id="floatKakao" href="#" target="_blank"><span>💛</span>카카오</a>
+    <a id="floatCall" href="#"><span>📞</span>문의</a>
+  </div>
+
+  <header>
+    <div class="wrap nav">
+      <div class="brand">
+        <div class="logoBox">ON</div>
+        <div>
+          <div id="brandName" style="font-size:24px">온빌드</div>
+          <div style="font-size:12px;color:#64748b">ONBUILD</div>
+        </div>
+      </div>
+      <nav class="menu">
+        <a href="#services">서비스</a>
+        <a href="#portfolio">시공사례</a>
+        <a href="#contact">문의하기</a>
+      </nav>
+      <div>
+        <button class="btn btnDark" onclick="toggleAdmin()">관리자</button>
+        <a id="topPhone" class="btn btnBlue" href="#">전화상담</a>
+      </div>
+    </div>
+  </header>
+
+  <div id="admin" class="admin">
+    <div class="wrap">
+      <h2>관리자 편집 화면</h2>
+      <div class="adminGrid">
+        <div class="panel">
+          <h3>기본 문구 수정</h3>
+          <label>상호명</label><input id="editCompany">
+          <label>메인 제목</label><textarea id="editTitle"></textarea>
+          <label>소개 문구</label><textarea id="editSub"></textarea>
+          <label>전화번호 1</label><input id="editPhone1">
+          <label>전화번호 2</label><input id="editPhone2">
+          <label>블로그 링크</label><input id="editBlog">
+          <label>인스타 링크</label><input id="editInsta">
+          <label>카카오 링크</label><input id="editKakao">
+          <button class="btn btnBlue" onclick="saveInfo()">저장하기</button>
+        </div>
+        <div class="panel">
+          <h3>시공사례 추가</h3>
+          <label>제목</label><input id="workTitle">
+          <label>설명</label><textarea id="workDesc"></textarea>
+          <label>사진 업로드</label><input type="file" accept="image/*" id="workFile">
+          <label>또는 이미지 주소</label><input id="workImg">
+          <button class="btn btnBlue" onclick="addWork()">시공사례 추가</button>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:20px">
+        <h3>서비스 문구 · 아이콘 · 이미지 수정</h3>
+        <div class="serviceEditor" id="serviceEditor"></div>
+        <button class="btn btnBlue" onclick="saveServices()">서비스 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="wrap heroGrid">
+        <div>
+          <div class="badge">철거부터 공간 완성까지</div>
+          <h1 id="heroTitle"></h1>
+          <p id="heroSub"></p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
+            <a id="heroPhone" class="btn btnBlue" href="#">상담문의</a>
+            <a class="btn" style="background:white;color:#0b2e5b" href="#portfolio">시공사례 보기</a>
+          </div>
+        </div>
+        <div class="heroImg"></div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="wrap">
+        <div class="center">
+          <div style="color:#0a63d8;font-weight:900">SERVICE</div>
+          <h2 class="sectionTitle">서비스 안내</h2>
+          <p class="sub">온빌드가 제공하는 전문 서비스를 확인해보세요.</p>
+        </div>
+        <div class="cards" id="serviceCards"></div>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="wrap">
+        <div class="detailGrid" id="serviceDetails"></div>
+      </div>
+    </section>
+
+    <section id="portfolio" style="background:#fff">
+      <div class="wrap">
+        <div class="center">
+          <div style="color:#0a63d8;font-weight:900">PORTFOLIO</div>
+          <h2 class="sectionTitle">시공사례</h2>
+          <p class="sub">사진과 설명을 직접 추가하고 관리할 수 있습니다.</p>
+        </div>
+        <div class="works" id="works"></div>
+      </div>
+    </section>
+
+    <section id="contact" style="background:#0b2e5b;color:white;text-align:center">
+      <div class="wrap">
+        <h2 class="sectionTitle">지금 바로 상담하세요</h2>
+        <p style="color:#dbeafe">현장 사진을 보내주시면 빠르게 상담 가능합니다.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px">
+          <a id="bottomPhone1" class="btn btnBlue" href="#"></a>
+          <a id="bottomPhone2" class="btn" style="background:white;color:#0b2e5b" href="#"></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© <span id="footerName">온빌드</span>. All rights reserved.</footer>
+
+<script>
+const defaultData = {
+  info:{
+    company:'온빌드',
+    title:'공간을 새롭게 만들다\nONBUILD',
+    sub:'철거 · 원상복구 · 인테리어 · FRP 수영장 · FRP 미끄럼틀 전문',
+    phone1:'010-8476-7456',
+    phone2:'010-9169-7557',
+    blog:'https://blog.naver.com/',
+    insta:'https://instagram.com/',
+    kakao:'https://open.kakao.com/'
+  },
+  services:[
+    {icon:'🏗️',title:'철거',text:'상가 · 사무실 · 내부 철거 및 폐기물 정리',link:'#demolition',img:'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200'},
+    {icon:'🔨',title:'원상복구',text:'임대 종료 후 천장 · 벽체 · 바닥 원상복구',link:'#restore',img:'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1200'},
+    {icon:'🎨',title:'인테리어',text:'상가 · 사무실 · 공간 리모델링 시공',link:'#interior',img:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200'},
+    {icon:'🏊',title:'FRP 수영장',text:'이동식 · 매립형 · 가족형 FRP 수영장 제작 설치',link:'#pool',img:'https://images.unsplash.com/photo-1572331165267-854da2b10ccc?w=1200'},
+    {icon:'🛝',title:'FRP 미끄럼틀',text:'워터슬라이드 · 키즈 미끄럼틀 맞춤 제작 설치',link:'#slide',img:'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=1200'}
+  ],
+  works:[
+    {title:'상가 철거 현장',desc:'기존 인테리어 구조물을 안전하게 철거하고 현장을 깔끔하게 정리했습니다.',img:'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200'},
+    {title:'원상복구 완료',desc:'임대 조건에 맞춰 천장, 벽면, 바닥까지 깔끔하게 복구했습니다.',img:'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1200'},
+    {title:'FRP 수영장 설치',desc:'가족형 물놀이 공간에 맞춘 FRP 수영장 설치 사례입니다.',img:'https://images.unsplash.com/photo-1572331165267-854da2b10ccc?w=1200'}
+  ]
+};
+let data = JSON.parse(localStorage.getItem('onbuildData')||'null') || defaultData;
+
+function save(){localStorage.setItem('onbuildData',JSON.stringify(data));}
+function render(){
+  brandName.textContent=data.info.company;
+  footerName.textContent=data.info.company;
+  heroTitle.textContent=data.info.title;
+  heroSub.textContent=data.info.sub;
+  topPhone.href='tel:'+data.info.phone1; heroPhone.href='tel:'+data.info.phone1;
+  topPhone.textContent='전화상담';
+  bottomPhone1.textContent=data.info.phone1; bottomPhone1.href='tel:'+data.info.phone1;
+  bottomPhone2.textContent=data.info.phone2; bottomPhone2.href='tel:'+data.info.phone2;
+  floatBlog.href=data.info.blog; floatInsta.href=data.info.insta; floatKakao.href=data.info.kakao; floatCall.href='tel:'+data.info.phone1;
+
+  serviceCards.innerHTML=data.services.map(s=>`
+    <a class="card" href="${s.link}">
+      <div class="cardImg" style="background-image:url('${s.img}')"></div>
+      <div class="cardBody"><div class="icon">${s.icon}</div><h3>${s.title}</h3><p class="sub">${s.text}</p><div class="more">자세히 보기 →</div></div>
+    </a>`).join('');
+  serviceDetails.innerHTML=data.services.map(s=>`
+    <div class="detail" id="${s.link.replace('#','')}"><img src="${s.img}"><div class="detailBody"><h3>${s.icon} ${s.title}</h3><p class="sub">${s.text}</p><a class="more" href="tel:${data.info.phone1}">상담 문의하기</a></div></div>`).join('');
+  works.innerHTML=data.works.map((w,i)=>`
+    <div class="work"><img src="${w.img}"><div class="workBody"><h3>${w.title}</h3><p class="sub">${w.desc}</p>${admin.classList.contains('show')?`<button onclick="deleteWork(${i})">삭제</button>`:''}</div></div>`).join('');
+}
+function toggleAdmin(){
+  admin.classList.toggle('show');
+  editCompany.value=data.info.company; editTitle.value=data.info.title; editSub.value=data.info.sub;
+  editPhone1.value=data.info.phone1; editPhone2.value=data.info.phone2; editBlog.value=data.info.blog; editInsta.value=data.info.insta; editKakao.value=data.info.kakao;
+  renderServiceEditor(); render();
+}
+function saveInfo(){
+  data.info={company:editCompany.value,title:editTitle.value,sub:editSub.value,phone1:editPhone1.value,phone2:editPhone2.value,blog:editBlog.value,insta:editInsta.value,kakao:editKakao.value};
+  save(); render(); alert('저장되었습니다');
+}
+function renderServiceEditor(){
+  serviceEditor.innerHTML=data.services.map((s,i)=>`
+    <div class="editItem">
+      <label>아이콘</label><input id="si${i}" value="${s.icon}">
+      <label>서비스명</label><input id="st${i}" value="${s.title}">
+      <label>설명</label><textarea id="sx${i}">${s.text}</textarea>
+      <label>링크</label><input id="sl${i}" value="${s.link}">
+      <label>사진 업로드</label><input type="file" accept="image/*" onchange="uploadService(${i},this.files[0])">
+      <label>이미지 주소</label><input id="sm${i}" value="${s.img}">
+    </div>`).join('');
+}
+function uploadService(i,file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{document.getElementById('sm'+i).value=r.result;};
+  r.readAsDataURL(file);
+}
+function saveServices(){
+  data.services=data.services.map((s,i)=>({icon:document.getElementById('si'+i).value,title:document.getElementById('st'+i).value,text:document.getElementById('sx'+i).value,link:document.getElementById('sl'+i).value,img:document.getElementById('sm'+i).value}));
+  save(); render(); alert('서비스가 저장되었습니다');
+}
+function addWork(){
+  const file=workFile.files[0];
+  const add=(img)=>{data.works.unshift({title:workTitle.value||'시공사례',desc:workDesc.value||'시공 설명을 입력하세요.',img:img||workImg.value||defaultData.works[0].img});save();render();workTitle.value='';workDesc.value='';workImg.value='';workFile.value='';};
+  if(file){const r=new FileReader();r.onload=()=>add(r.result);r.readAsDataURL(file);}else add();
+}
+function deleteWork(i){data.works.splice(i,1);save();render();}
+render();
+</script>
+</body>
+</html>
